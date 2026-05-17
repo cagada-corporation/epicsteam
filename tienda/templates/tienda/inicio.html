@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EpicSteam</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family: Arial, Helvetica, sans-serif;
+            background:#141414;
+            color:white;
+        }
+
+        .navbar{
+            background:#0f0f0f;
+            padding:20px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            border-bottom:2px solid #1f1f1f;
+        }
+
+        .logo{
+            font-size:30px;
+            font-weight:bold;
+            color:#00bfff;
+        }
+
+        .container{
+            padding:40px;
+        }
+
+        .title{
+            font-size:40px;
+            margin-bottom:30px;
+        }
+
+        .games{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+            gap:25px;
+        }
+
+        .card{
+            background:#1d1d1d;
+            border-radius:15px;
+            overflow:hidden;
+            transition:0.3s;
+            box-shadow:0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .card:hover{
+            transform:scale(1.03);
+        }
+
+        .card img{
+            width:100%;
+            height:300px;
+            object-fit:cover;
+        }
+
+        .card-content{
+            padding:20px;
+        }
+
+        .game-title{
+            font-size:24px;
+            margin-bottom:10px;
+        }
+
+        .description{
+            color:#cfcfcf;
+            margin-bottom:15px;
+        }
+
+        .price{
+            font-size:22px;
+            color:#00ff99;
+            font-weight:bold;
+        }
+
+        .stock{
+            margin-top:10px;
+            color:#999;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">
+            EpicSteam
+        </div>
+
+        <div>
+            Tu tienda de videojuegos
+        </div>
+
+    </div>
+
+    <div class="container">
+
+        <div class="title">
+            Juegos destacados
+        </div>
+
+        <div class="games">
+
+            {% for product in products %}
+
+            <div class="card">
+
+                {% if product.image %}
+                    <img src="{{ product.image.url }}">
+                {% endif %}
+
+                <div class="card-content">
+
+                    <div class="game-title">
+                        {{ product.name }}
+                    </div>
+
+                    <div class="description">
+                        {{ product.description }}
+                    </div>
+
+                    <div class="price">
+                        ${{ product.price }}
+                    </div>
+
+                    <div class="stock">
+                        Stock: {{ product.stock }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+                <h2>No hay juegos disponibles</h2>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>
