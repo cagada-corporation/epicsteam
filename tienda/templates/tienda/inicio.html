@@ -1,293 +1,245 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends 'tienda/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block content %}
 
-    <title>EpicSteam</title>
+<style>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
 
-    <style>
+    .hero{
+        width:100%;
+        height:400px;
+        background:
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
+        url('https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=2070&auto=format&fit=crop');
 
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
+        background-size:cover;
+        background-position:center;
 
-        body{
-            font-family:'Inter', sans-serif;
-            background:#0d1117;
-            color:white;
-        }
+        display:flex;
+        align-items:center;
 
-        .navbar{
-            width:100%;
-            background:#161b22;
-            padding:20px 60px;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            border-bottom:1px solid #30363d;
-            position:sticky;
-            top:0;
-        }
+        padding:60px;
 
-        .logo{
-            font-size:32px;
-            font-weight:700;
-            color:#00bfff;
-        }
+        border-radius:20px;
+        overflow:hidden;
+    }
 
-        .nav-right{
-            display:flex;
-            gap:15px;
-            align-items:center;
-        }
+    .hero-content{
+        max-width:600px;
+    }
 
-        .cart-btn{
-            background:#00bfff;
-            border:none;
-            padding:12px 20px;
-            border-radius:12px;
-            color:white;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.3s;
-        }
+    .hero-title{
+        font-size:60px;
+        font-weight:700;
+        margin-bottom:20px;
+        color:white;
+    }
 
-        .cart-btn:hover{
-            transform:scale(1.05);
-        }
+    .hero-text{
+        color:#c9d1d9;
+        font-size:18px;
+        margin-bottom:25px;
+        line-height:1.6;
+    }
+
+    .hero-btn{
+        background:#00bfff;
+        border:none;
+        padding:15px 25px;
+        border-radius:12px;
+        color:white;
+        font-size:16px;
+        font-weight:600;
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    .hero-btn:hover{
+        transform:scale(1.05);
+    }
+
+    .section-title{
+        font-size:42px;
+        margin-top:50px;
+        margin-bottom:35px;
+        font-weight:700;
+        color:white;
+    }
+
+    .games{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+        gap:30px;
+    }
+
+    .card{
+        background:#161b22;
+        border-radius:20px;
+        overflow:hidden;
+        transition:0.3s;
+        border:1px solid #30363d;
+    }
+
+    .card:hover{
+        transform:translateY(-5px);
+        box-shadow:0 0 25px rgba(0,191,255,0.2);
+    }
+
+    .card img{
+        width:100%;
+        height:380px;
+        object-fit:cover;
+    }
+
+    .card-content{
+        padding:25px;
+    }
+
+    .game-title{
+        font-size:22px;
+        font-weight:600;
+        margin-bottom:12px;
+        color:white;
+    }
+
+    .description{
+        color:#8b949e;
+        line-height:1.5;
+        margin-bottom:20px;
+    }
+
+    .price{
+        font-size:24px;
+        font-weight:700;
+        color:#3fb950;
+        margin-bottom:10px;
+    }
+
+    .stock{
+        color:#8b949e;
+        margin-bottom:20px;
+    }
+
+    .buy-btn{
+        width:100%;
+        padding:14px;
+        border:none;
+        border-radius:12px;
+        background:#00bfff;
+        color:white;
+        font-size:15px;
+        font-weight:600;
+        cursor:pointer;
+        transition:0.3s;
+    }
+
+    .buy-btn:hover{
+        transform:scale(1.03);
+    }
+
+    .empty{
+        font-size:22px;
+        color:#8b949e;
+    }
+
+    @media(max-width:768px){
 
         .hero{
-            width:100%;
-            height:400px;
-            background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)),
-            url('https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=2070&auto=format&fit=crop');
-            background-size:cover;
-            background-position:center;
-            display:flex;
-            align-items:center;
-            padding:60px;
-        }
-
-        .hero-content{
-            max-width:600px;
+            padding:30px;
+            height:auto;
         }
 
         .hero-title{
-            font-size:60px;
-            font-weight:700;
-            margin-bottom:20px;
+            font-size:40px;
         }
 
-        .hero-text{
-            color:#c9d1d9;
-            font-size:18px;
-            margin-bottom:25px;
-            line-height:1.6;
-        }
+    }
 
-        .hero-btn{
-            background:#00bfff;
-            border:none;
-            padding:15px 25px;
-            border-radius:12px;
-            color:white;
-            font-size:16px;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.3s;
-        }
+</style>
 
-        .hero-btn:hover{
-            transform:scale(1.05);
-        }
+<div class="hero">
 
-        .container{
-            padding:60px;
-        }
+    <div class="hero-content">
 
-        .section-title{
-            font-size:36px;
-            margin-bottom:35px;
-            font-weight:700;
-        }
-
-        .games{
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-            gap:30px;
-        }
-
-        .card{
-            background:#161b22;
-            border-radius:20px;
-            overflow:hidden;
-            transition:0.3s;
-            border:1px solid #30363d;
-        }
-
-        .card:hover{
-            transform:translateY(-5px);
-            box-shadow:0 0 25px rgba(0,191,255,0.2);
-        }
-
-        .card img{
-            width:100%;
-            height:380px;
-            object-fit:cover;
-        }
-
-        .card-content{
-            padding:25px;
-        }
-
-        .game-title{
-            font-size:22px;
-            font-weight:600;
-            margin-bottom:12px;
-        }
-
-        .description{
-            color:#8b949e;
-            line-height:1.5;
-            margin-bottom:20px;
-        }
-
-        .price{
-            font-size:24px;
-            font-weight:700;
-            color:#3fb950;
-            margin-bottom:10px;
-        }
-
-        .stock{
-            color:#8b949e;
-            margin-bottom:20px;
-        }
-
-        .buy-btn{
-            width:100%;
-            padding:14px;
-            border:none;
-            border-radius:12px;
-            background:#00bfff;
-            color:white;
-            font-size:15px;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.3s;
-        }
-
-        .buy-btn:hover{
-            transform:scale(1.03);
-        }
-
-        .empty{
-            font-size:22px;
-            color:#8b949e;
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-    <div class="navbar">
-
-        <div class="logo">
-            EpicSteam
+        <div class="hero-title">
+            Las mejores ofertas gaming
         </div>
 
-        <div class="nav-right">
+        <div class="hero-text">
+            Compra videojuegos al mejor precio y descubre nuevos mundos,
+            aventuras y desafíos increíbles.
+        </div>
 
-            <button class="cart-btn">
-                🛒 Carrito
-            </button>
+        <button class="hero-btn">
+            Explorar juegos
+        </button>
+
+    </div>
+
+</div>
+
+<div class="section-title">
+    Juegos destacados
+</div>
+
+<div class="games">
+
+    {% for product in products %}
+
+    <div class="card">
+
+        {% if product.image %}
+
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+
+        {% else %}
+
+            <img src="https://via.placeholder.com/400x380?text=Sin+Imagen">
+
+        {% endif %}
+
+        <div class="card-content">
+
+            <div class="game-title">
+                {{ product.name }}
+            </div>
+
+            <div class="description">
+                {{ product.description }}
+            </div>
+
+            <div class="price">
+                ${{ product.price }}
+            </div>
+
+            <div class="stock">
+                Stock disponible: {{ product.stock }}
+            </div>
+
+            <a href="{% url 'add_to_cart' product.id %}"
+               class="btn btn-info w-100 text-white fw-bold">
+
+               Agregar al carrito
+
+            </a>
 
         </div>
 
     </div>
 
-    <div class="hero">
+    {% empty %}
 
-        <div class="hero-content">
-
-            <div class="hero-title">
-                Las mejores ofertas gaming
-            </div>
-
-            <div class="hero-text">
-                Compra videojuegos al mejor precio y descubre nuevos mundos, aventuras y desafios increibles.
-            </div>
-
-            <button class="hero-btn">
-                Explorar juegos
-            </button>
-
+        <div class="empty">
+            No hay juegos disponibles.
         </div>
 
-    </div>
+    {% endfor %}
 
-    <div class="container">
+</div>
 
-        <div class="section-title">
-            Juegos destacados
-        </div>
-
-        <div class="games">
-
-            {% for product in products %}
-
-            <div class="card">
-
-                {% if product.image %}
-                    <img src="{{ product.image.url }}">
-                {% endif %}
-
-                <div class="card-content">
-
-                    <div class="game-title">
-                        {{ product.name }}
-                    </div>
-
-                    <div class="description">
-                        {{ product.description }}
-                    </div>
-
-                    <div class="price">
-                        ${{ product.price }}
-                    </div>
-
-                    <div class="stock">
-                        Stock disponible: {{ product.stock }}
-                    </div>
-
-                    <button class="buy-btn">
-                        Agregar al carrito
-                    </button>
-
-                </div>
-
-            </div>
-
-            {% empty %}
-
-                <div class="empty">
-                    No hay juegos disponibles.
-                </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</body>
-
-</html>
+{% endblock %}
