@@ -23,4 +23,16 @@ urlpatterns = [
         name='add_to_cart'
     ),
 
+    path(
+        'cart/decrease/<uuid:product_id>/', 
+        views.decrease_quantity, 
+        name='decrease_quantity'
+    ),
+
+    path(
+        'cart/remove/<uuid:product_id>/', 
+        views.remove_from_cart, 
+        name='remove_from_cart'
+    ),
+
 ]
