@@ -92,7 +92,7 @@ class Cart(models.Model):
 
     @property
     def total(self):
-        return sum(item.subtotal for item in self.cartitem_set.all())
+        return sum(item.subtotal for item in self.items.all())
 
     def __str__(self):
         return f"Cart {self.user.username}"
@@ -105,9 +105,16 @@ class CartItem(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(
+        Cart,
+        related_name='items',
+        on_delete=models.CASCADE
+    )
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
 
     quantity = models.PositiveIntegerField(default=1)
 
