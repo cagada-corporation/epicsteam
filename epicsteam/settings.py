@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTH_USER_MODEL = 'store.User'
+
 ROOT_URLCONF = 'epicsteam.urls'
 
 TEMPLATES = [
