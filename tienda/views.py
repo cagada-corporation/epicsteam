@@ -14,104 +14,167 @@ def home(request):
         'products': products
     })
 
+
+# =========================
+# 🎮 DETALLE DEL JUEGO
+# =========================
+def product_detail(request, product_id):
+
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
+
+    return render(request, 'tienda/product_detail.html', {
+        'product': product
+    })
+
+
 # =========================
 # 📝 REGISTRO
 # =========================
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
+
         if form.is_valid():
             user = form.save()
+
             Cart.objects.create(user=user)
+
             login(request, user)
+
             return redirect('home')
+
     else:
         form = RegisterForm()
+
     return render(request, 'tienda/register.html', {
         'form': form
     })
+
 
 # =========================
 # 🔐 LOGIN
 # =========================
 def login_view(request):
+
     if request.method == 'POST':
+
         username = request.POST.get('username')
         password = request.POST.get('password')
+
         user = authenticate(
             request,
             username=username,
             password=password
         )
+
         if user:
             login(request, user)
             return redirect('home')
+
     return render(request, 'tienda/login.html')
+
 
 # =========================
 # 🚪 LOGOUT
 # =========================
 def logout_view(request):
+
     logout(request)
+
     return redirect('home')
+
 
 # =========================
 # 📊 DASHBOARD
 # =========================
 @login_required
 def dashboard(request):
+
     if not request.user.is_seller:
         return HttpResponseForbidden("No eres vendedor")
-    products = Product.objects.filter(owner=request.user)
+
+    products = Product.objects.filter(
+        owner=request.user
+    )
+
     return render(request, 'tienda/dashboard.html', {
         'products': products
     })
+
 
 # =========================
 # ➕ CREAR PRODUCTO
 # =========================
 @login_required
 def product_create(request):
+
     if not request.user.is_seller:
         return HttpResponseForbidden("Solo vendedores")
+
     form = ProductForm(
         request.POST or None,
         request.FILES or None
     )
+
     if form.is_valid():
+
         product = form.save(commit=False)
+
         product.owner = request.user
+
         product.save()
+
         form.save_m2m()
+
         return redirect('dashboard')
+
     return render(request, 'tienda/product_form.html', {
         'form': form
     })
+
 
 # =========================
 # 🛒 VER CARRITO
 # =========================
 @login_required
 def cart_detail(request):
-    cart = Cart.objects.get(user=request.user)
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
     return render(request, 'tienda/cart_detail.html', {
         'cart': cart
     })
+
 
 # =========================
 # ➕ AGREGAR AL CARRITO
 # =========================
 @login_required
 def add_to_cart(request, product_id):
-    cart = Cart.objects.get(user=request.user)
-    product = get_object_or_404(Product, id=product_id)
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
+
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart,
         product=product
     )
+
     if not created:
         cart_item.quantity += 1
         cart_item.save()
+
     return redirect('cart_detail')
 
 
@@ -120,9 +183,21 @@ def add_to_cart(request, product_id):
 # =========================
 @login_required
 def decrease_quantity(request, product_id):
-    cart = Cart.objects.get(user=request.user)
-    product = get_object_or_404(Product, id=product_id)
-    cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
+
+    cart_item = get_object_or_404(
+        CartItem,
+        cart=cart,
+        product=product
+    )
 
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
@@ -138,10 +213,22 @@ def decrease_quantity(request, product_id):
 # =========================
 @login_required
 def remove_from_cart(request, product_id):
-    cart = Cart.objects.get(user=request.user)
-    product = get_object_or_404(Product, id=product_id)
-    cart_item = get_object_or_404(CartItem, cart=cart, product=product)
-    
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
+
+    cart_item = get_object_or_404(
+        CartItem,
+        cart=cart,
+        product=product
+    )
+
     cart_item.delete()
 
     return redirect('cart_detail')
