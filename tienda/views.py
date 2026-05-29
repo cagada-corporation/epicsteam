@@ -3,15 +3,35 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from .forms import RegisterForm, ProductForm
-from .models import Product, Cart, CartItem, Category
+from .models import Product, Cart, CartItem, Category, Favorite
+
 
 # =========================
 # 🏠 HOME
 # =========================
 def home(request):
+
     products = Product.objects.all()
+    categories = Category.objects.all()
+
+    query = request.GET.get('q')
+    category_id = request.GET.get('category')
+
+    # BUSCADOR
+    if query:
+        products = products.filter(
+            name__icontains=query
+        )
+
+    # FILTRO POR CATEGORÍA
+    if category_id:
+        products = products.filter(
+            categories__id=category_id
+        )
+
     return render(request, 'tienda/inicio.html', {
-        'products': products
+        'products': products,
+        'categories': categories
     })
 
 
@@ -34,10 +54,13 @@ def product_detail(request, product_id):
 # 📝 REGISTRO
 # =========================
 def register(request):
+
     if request.method == 'POST':
+
         form = RegisterForm(request.POST)
 
         if form.is_valid():
+
             user = form.save()
 
             Cart.objects.create(user=user)
@@ -47,6 +70,7 @@ def register(request):
             return redirect('home')
 
     else:
+
         form = RegisterForm()
 
     return render(request, 'tienda/register.html', {
@@ -71,7 +95,9 @@ def login_view(request):
         )
 
         if user:
+
             login(request, user)
+
             return redirect('home')
 
     return render(request, 'tienda/login.html')
@@ -166,14 +192,23 @@ def add_to_cart(request, product_id):
         id=product_id
     )
 
+    # VALIDAR STOCK
+    if product.stock <= 0:
+        return redirect('home')
+
     cart_item, created = CartItem.objects.get_or_create(
         cart=cart,
         product=product
     )
 
     if not created:
+
         cart_item.quantity += 1
         cart_item.save()
+
+    # RESTAR STOCK
+    product.stock -= 1
+    product.save()
 
     return redirect('cart_detail')
 
@@ -199,10 +234,17 @@ def decrease_quantity(request, product_id):
         product=product
     )
 
+    # DEVOLVER STOCK
+    product.stock += 1
+    product.save()
+
     if cart_item.quantity > 1:
+
         cart_item.quantity -= 1
         cart_item.save()
+
     else:
+
         cart_item.delete()
 
     return redirect('cart_detail')
@@ -229,6 +271,65 @@ def remove_from_cart(request, product_id):
         product=product
     )
 
+    # DEVOLVER TODO EL STOCK
+    product.stock += cart_item.quantity
+    product.save()
+
     cart_item.delete()
 
     return redirect('cart_detail')
+
+
+# =========================
+# ❤️ AGREGAR A FAVORITOS
+# =========================
+@login_required
+def add_to_favorites(request, product_id):
+
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
+
+    Favorite.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
+
+    return redirect('home')
+
+
+# =========================
+# ❤️ VER FAVORITOS
+# =========================
+@login_required
+def favorite_list(request):
+
+    favorites = Favorite.objects.filter(
+        user=request.user
+    )
+
+    return render(request, 'tienda/favorites.html', {
+        'favorites': favorites
+    })
+
+
+# =========================
+# ❌ ELIMINAR FAVORITO
+# =========================
+@login_required
+def remove_from_favorites(request, product_id):
+
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
+
+    favorite = Favorite.objects.filter(
+        user=request.user,
+        product=product
+    )
+
+    favorite.delete()
+
+    return redirect('favorite_list')

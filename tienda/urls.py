@@ -14,17 +14,53 @@ urlpatterns = [
         name='product_detail'
     ),
 
-    path('register/', views.register, name='register'),
+    # =========================
+    # 👤 AUTENTICACIÓN
+    # =========================
+    path(
+        'register/',
+        views.register,
+        name='register'
+    ),
 
-    path('login/', views.login_view, name='login'),
+    path(
+        'login/',
+        views.login_view,
+        name='login'
+    ),
 
-    path('logout/', views.logout_view, name='logout'),
+    path(
+        'logout/',
+        views.logout_view,
+        name='logout'
+    ),
 
-    path('dashboard/', views.dashboard, name='dashboard'),
+    # =========================
+    # 📊 DASHBOARD
+    # =========================
+    path(
+        'dashboard/',
+        views.dashboard,
+        name='dashboard'
+    ),
 
-    path('products/create/', views.product_create, name='product_create'),
+    # =========================
+    # ➕ CREAR PRODUCTO
+    # =========================
+    path(
+        'products/create/',
+        views.product_create,
+        name='product_create'
+    ),
 
-    path('cart/', views.cart_detail, name='cart_detail'),
+    # =========================
+    # 🛒 CARRITO
+    # =========================
+    path(
+        'cart/',
+        views.cart_detail,
+        name='cart_detail'
+    ),
 
     path(
         'cart/add/<uuid:product_id>/',
@@ -42,6 +78,27 @@ urlpatterns = [
         'cart/remove/<uuid:product_id>/',
         views.remove_from_cart,
         name='remove_from_cart'
+    ),
+
+    # =========================
+    # ❤️ FAVORITOS
+    # =========================
+    path(
+        'favorites/',
+        views.favorite_list,
+        name='favorite_list'
+    ),
+
+    path(
+        'favorites/add/<uuid:product_id>/',
+        views.add_to_favorites,
+        name='add_to_favorites'
+    ),
+
+    path(
+        'favorites/remove/<uuid:product_id>/',
+        views.remove_from_favorites,
+        name='remove_from_favorites'
     ),
 
 ]

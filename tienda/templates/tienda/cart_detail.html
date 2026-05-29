@@ -2,61 +2,223 @@
 
 {% block content %}
 
-<h1 class="mb-4 text-white">
-    Carrito de Compras
+<style>
+
+    .cart-title{
+        font-size:40px;
+        font-weight:700;
+        margin-bottom:40px;
+        color:white;
+        text-align:center;
+    }
+
+    .cart-grid{
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+        gap:30px;
+    }
+
+    .cart-card{
+        background:#1e293b;
+        border-radius:18px;
+        overflow:hidden;
+        border:1px solid #334155;
+        transition:0.3s;
+    }
+
+    .cart-card:hover{
+        transform:translateY(-5px);
+    }
+
+    .cart-img{
+        width:100%;
+        height:220px;
+        object-fit:cover;
+    }
+
+    .cart-content{
+        padding:20px;
+    }
+
+    .game-title{
+        font-size:22px;
+        font-weight:700;
+        margin-bottom:15px;
+        color:white;
+    }
+
+    .description{
+        color:#cbd5e1;
+        line-height:1.6;
+        margin-bottom:20px;
+    }
+
+    .price{
+        color:#22c55e;
+        font-size:20px;
+        font-weight:700;
+        margin-bottom:15px;
+    }
+
+    .quantity{
+        color:#f1f5f9;
+        margin-bottom:20px;
+        font-size:16px;
+    }
+
+    .stock{
+        color:#94a3b8;
+        margin-bottom:20px;
+    }
+
+    .buttons{
+        display:flex;
+        gap:10px;
+    }
+
+    .btn-add{
+        flex:1;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#2563eb;
+        color:white;
+        font-weight:700;
+        text-decoration:none;
+        text-align:center;
+        transition:0.3s;
+    }
+
+    .btn-add:hover{
+        background:#1d4ed8;
+    }
+
+    .btn-remove{
+        flex:1;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#eab308;
+        color:black;
+        font-weight:700;
+        text-decoration:none;
+        text-align:center;
+        transition:0.3s;
+    }
+
+    .btn-remove:hover{
+        background:#ca8a04;
+    }
+
+    .btn-delete{
+        flex:1;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#ef4444;
+        color:white;
+        font-weight:700;
+        text-decoration:none;
+        text-align:center;
+        transition:0.3s;
+    }
+
+    .btn-delete:hover{
+        background:#dc2626;
+    }
+
+    .empty{
+        text-align:center;
+        font-size:24px;
+        color:#94a3b8;
+        margin-top:50px;
+    }
+
+</style>
+
+<h1 class="cart-title">
+    Mi carrito
 </h1>
 
 {% if cart.items.all %}
 
-    <div class="row">
+<div class="cart-grid">
 
-        {% for item in cart.items.all %}
+    {% for item in cart.items.all %}
 
-        <div class="col-md-4 mb-4">
+    <div class="cart-card">
 
-            <div class="card bg-dark text-white p-3">
+        {% if item.product.image %}
+            <img src="{{ item.product.image.url }}"
+                 class="cart-img">
+        {% endif %}
 
-                {% if item.product.image %}
-                    <img src="{{ item.product.image.url }}"
-                         class="img-fluid mb-3">
-                {% endif %}
+        <div class="cart-content">
 
-                <h3>{{ item.product.name }}</h3>
+            <div class="game-title">
+                {{ item.product.name }}
+            </div>
 
-                <p>{{ item.product.description }}</p>
+            <div class="description">
+                {{ item.product.description|truncatechars:140 }}
+            </div>
 
-                <h4 class="text-success">
-                    ${{ item.product.price }}
-                </h4>
+            <div class="price">
+                ${{ item.product.price }}
+            </div>
 
-                <p>
-                    Cantidad: {{ item.quantity }}
-                </p>
+            <div class="quantity">
+                Cantidad: {{ item.quantity }}
+            </div>
 
-                <div class="d-flex gap-2 mt-2">
-                    <a href="{% url 'decrease_quantity' item.product.id %}" 
-                       class="btn btn-warning btn-sm w-50 fw-bold">
-                        - Restar 1
-                    </a>
-                    <a href="{% url 'remove_from_cart' item.product.id %}" 
-                       class="btn btn-danger btn-sm w-50 fw-bold">
-                        Eliminar
-                    </a>
-                </div>
+            <div class="stock">
+                Stock restante: {{ item.product.stock }}
+            </div>
+
+            <div class="buttons">
+
+                <!-- AGREGAR MÁS -->
+
+                <a href="{% url 'add_to_cart' item.product.id %}"
+                   class="btn-add">
+
+                   + Agregar 1
+
+                </a>
+
+                <!-- RESTAR -->
+
+                <a href="{% url 'decrease_quantity' item.product.id %}"
+                   class="btn-remove">
+
+                   - Restar 1
+
+                </a>
+
+                <!-- ELIMINAR -->
+
+                <a href="{% url 'remove_from_cart' item.product.id %}"
+                   class="btn-delete">
+
+                   Eliminar
+
+                </a>
 
             </div>
 
         </div>
 
-        {% endfor %}
-
     </div>
+
+    {% endfor %}
+
+</div>
 
 {% else %}
 
-    <h3 class="text-white">
-        Tu carrito está vacío
-    </h3>
+<div class="empty">
+    Tu carrito está vacío.
+</div>
 
 {% endif %}
 

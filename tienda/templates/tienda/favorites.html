@@ -1,0 +1,71 @@
+{% extends 'tienda/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h1 class="text-white mb-4">
+        ❤️ Mis Favoritos
+    </h1>
+
+    <div class="row">
+
+        {% for favorite in favorites %}
+
+        <div class="col-md-4 mb-4">
+
+            <div class="card bg-dark text-white h-100">
+
+                {% if favorite.product.image %}
+                    <img src="{{ favorite.product.image.url }}"
+                         class="card-img-top"
+                         style="height:300px; object-fit:cover;">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5 class="card-title">
+                        {{ favorite.product.name }}
+                    </h5>
+
+                    <p class="card-text">
+                        {{ favorite.product.description|truncatechars:80 }}
+                    </p>
+
+                    <h4 class="text-info">
+                        ${{ favorite.product.price }}
+                    </h4>
+
+                    <a href="{% url 'product_detail' favorite.product.id %}"
+                       class="btn btn-info w-100 mb-2">
+
+                        Ver juego
+
+                    </a>
+
+                    <a href="{% url 'remove_from_favorites' favorite.product.id %}"
+                       class="btn btn-danger w-100">
+
+                        ❌ Eliminar
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <h4 class="text-secondary">
+            No tienes juegos favoritos.
+        </h4>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
