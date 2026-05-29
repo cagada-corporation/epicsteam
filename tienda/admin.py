@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Category, Product, Cart, CartItem
+from .models import User, Category, Product, Cart, CartItem, Favorite
 
 
 @admin.register(User)
@@ -42,3 +42,8 @@ class CartAdmin(admin.ModelAdmin):
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
     list_display = ('cart', 'product', 'quantity')
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'product')

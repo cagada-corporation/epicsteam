@@ -72,16 +72,16 @@ class Product(models.Model):
 
 
 # =========================
-# 🛒 Carrito
+# 🛒 Carrito (MODIFICADO)
 # =========================
 class Cart(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(  # ✅ Cambiado de ForeignKey a OneToOneField
         User,
         on_delete=models.CASCADE,
-        related_name='carts'
+        related_name='cart'  # ✅ Cambiado de 'carts' a 'cart' (singular)
     )
 
     products = models.ManyToManyField(

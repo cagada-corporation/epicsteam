@@ -63,7 +63,15 @@ def register(request):
 
             user = form.save()
 
-            Cart.objects.create(user=user)
+            # CREAR CARRITO SOLO SI NO EXISTE
+            cart = Cart.objects.filter(
+                user=user
+            ).first()
+
+            if not cart:
+                Cart.objects.create(
+                    user=user
+                )
 
             login(request, user)
 
@@ -168,9 +176,14 @@ def product_create(request):
 @login_required
 def cart_detail(request):
 
-    cart, created = Cart.objects.get_or_create(
+    cart = Cart.objects.filter(
         user=request.user
-    )
+    ).first()
+
+    if not cart:
+        cart = Cart.objects.create(
+            user=request.user
+        )
 
     return render(request, 'tienda/cart_detail.html', {
         'cart': cart
@@ -183,9 +196,16 @@ def cart_detail(request):
 @login_required
 def add_to_cart(request, product_id):
 
-    cart, created = Cart.objects.get_or_create(
+    # OBTENER SOLO UN CARRITO
+    cart = Cart.objects.filter(
         user=request.user
-    )
+    ).first()
+
+    # SI NO EXISTE LO CREA
+    if not cart:
+        cart = Cart.objects.create(
+            user=request.user
+        )
 
     product = get_object_or_404(
         Product,
@@ -196,15 +216,26 @@ def add_to_cart(request, product_id):
     if product.stock <= 0:
         return redirect('home')
 
-    cart_item, created = CartItem.objects.get_or_create(
+    # BUSCAR SI YA EXISTE
+    cart_item = CartItem.objects.filter(
         cart=cart,
         product=product
-    )
+    ).first()
 
-    if not created:
+    # SI YA EXISTE SUMA CANTIDAD
+    if cart_item:
 
         cart_item.quantity += 1
         cart_item.save()
+
+    # SI NO EXISTE CREA NUEVO
+    else:
+
+        CartItem.objects.create(
+            cart=cart,
+            product=product,
+            quantity=1
+        )
 
     # RESTAR STOCK
     product.stock -= 1
@@ -219,9 +250,12 @@ def add_to_cart(request, product_id):
 @login_required
 def decrease_quantity(request, product_id):
 
-    cart, created = Cart.objects.get_or_create(
+    cart = Cart.objects.filter(
         user=request.user
-    )
+    ).first()
+
+    if not cart:
+        return redirect('cart_detail')
 
     product = get_object_or_404(
         Product,
@@ -256,9 +290,12 @@ def decrease_quantity(request, product_id):
 @login_required
 def remove_from_cart(request, product_id):
 
-    cart, created = Cart.objects.get_or_create(
+    cart = Cart.objects.filter(
         user=request.user
-    )
+    ).first()
+
+    if not cart:
+        return redirect('cart_detail')
 
     product = get_object_or_404(
         Product,
