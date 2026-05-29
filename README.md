@@ -12,7 +12,7 @@ Este proyecto fue creado utilizando **Markdown** y **Editor.md** para aprender a
 
 La idea principal de este repositorio es practicar tecnologías web, control de versiones y desarrollo backend utilizando Python y Django.
 
-![](https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/782330/page_bg_raw.jpg?t=1755109910)
+![](https://portal.33bits.net/wp-content/uploads/2018/11/Red-Dead-Redemption-2-960x640-1024x640.jpg)
 ---
 
 # 🚀 Características
