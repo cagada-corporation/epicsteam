@@ -43,7 +43,7 @@ La idea principal de este repositorio es practicar tecnologías web, control de 
 - GitHub
 - VS Code
 - Editor.md
-
+![](https://camo.githubusercontent.com/42b4c9f3d06686406dc3509b7ff1ba6c1f122c66001cff7ee555b6c6213725d1/68747470733a2f2f70616e64616f2e6769746875622e696f2f656469746f722e6d642f696d616765732f6c6f676f732f656469746f726d642d6c6f676f2d313830783138302e706e67)
 ---
 
 # 📂 Estructura del proyecto
